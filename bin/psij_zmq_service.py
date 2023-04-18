@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 
+import sys
+import radical.utils as ru
+
+import psij
+import functools
+
+from typing import List, Dict, Any, Tuple, Optional
+
+
 '''
 This file implements a psij job service.  The service can be contacted via ZMQ.
 It listens for requests on a `zmq.REP` reply socket - a client should
@@ -78,12 +87,6 @@ supported `cmd` requests, their parameters and return values are as follows:
         This method will return a list of job IDs known to this service.
 
 '''
-
-import psij
-import functools
-import radical.utils as ru
-
-from typing import List, Dict, Any, Tuple, Optional
 
 
 class Service(ru.zmq.Server):
@@ -208,9 +211,17 @@ class Service(ru.zmq.Server):
             return fin.read()
 
 
-if __name__ == '__main__':
+def main():
 
+    # start a service instance
     s = Service()
     s.start()
-    print('service address: %s' % s.addr)
+
+    sys.stdout.write('url: %s\n' % s.addr)
+    sys.stdout.flush()
+
     s.wait()
+
+
+if __name__ == '__main__':
+    main()

@@ -2,6 +2,7 @@
 include *.py *.md *.sh *.txt
 include LICENSE MANIFEST.in RELEASE
 
-recursive-include src      *.sh *.json
+recursive-include bin      *.py
+recursive-include src      *.sh *.json VERSION
 recursive-include examples *.py *.json
 
