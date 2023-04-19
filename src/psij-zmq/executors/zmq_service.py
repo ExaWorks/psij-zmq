@@ -41,6 +41,7 @@ class ZMQServiceJobExecutor(JobExecutor):
         :param config: The `ZMQServiceJobExecutor` does not have any
                     configuration options.
         """
+        self._sub = None
         ru_url = ru.Url(url)
         if ru_url.schema not in ['tcp', 'zmq']:
             raise ValueError('expected `tcp://` or `zmq://` as url schema')
@@ -69,13 +70,16 @@ class ZMQServiceJobExecutor(JobExecutor):
         self._client = ru.zmq.Client(url=str(ru_url).rstrip('/'))
         self._cid, sub_url = self._client.request('register', name=name)
 
+        # FIXME: call back to hosting ssh executor, get tunnel to sub_url
+
         # subscribe for state update information (trigger `self._state_cb`)
         self._sub = ru.zmq.Subscriber(channel='state', url=sub_url,
                                       cb=self._state_cb, topic=self._cid)
 
     def __del__(self) -> None:
         """Stop subscriber thread upon destruction."""
-        self._sub.stop()
+        if self._sub is not None:
+            self._sub.stop()
 
     def _state_cb(self, topic: str, msg: Dict[str, Any]) -> None:
         """Callback triggered on job state update messages.
