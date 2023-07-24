@@ -4,4 +4,4 @@ from psij.descriptor import Descriptor
 
 
 __PSI_J_EXECUTORS__ = [Descriptor(name='zmq', version=StrictVersion('0.0.1'),
-                                  cls='psij-zmq.executors.zmq_service.ZMQServiceJobExecutor')]
+                                  cls='psij-zmq.executors.zmq_service.ZMQExecutor')]
